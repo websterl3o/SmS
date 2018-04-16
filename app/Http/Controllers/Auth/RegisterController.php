@@ -48,8 +48,19 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        // $data['date_of_birth'] = str_replace("/", "-", $data['date_of_birth']);
+        $date = $data['date_of_birth'];
+        $date = explode("/", $date);
+        $date = $date[2]."-".$date[1]."-".$date[0];
+        $data['date_of_birth'] = $date;
+        // $date = new DateTime($date);
+
+        // $data['date_of_birth'] = dateformat($data['date_of_birth'], "d-m-Y");
+        // $data
         return Validator::make($data, [
             'name' => 'required|string|max:255',
+            'name_complete' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -63,8 +74,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $date = $data['date_of_birth'];
+        $date = explode("/", $date);
+        $date = $date[2]."-".$date[1]."-".$date[0];
+        $data['date_of_birth'] = $date;
+
         return User::create([
             'name' => $data['name'],
+            'name_complete' => $data['name_complete'],
+            'date_of_birth' => $data['date_of_birth'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
